@@ -1,1 +1,0 @@
-# django-vezzeta-app
