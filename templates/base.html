@@ -54,9 +54,9 @@
                         <div class="main-menu  d-none d-lg-block">
                             <nav>
                                 <ul id="navigation">
-                                    <li><a href="">احجز دكتورك</a></li>|
+                                    <li><a href="{% url 'accounts:book_appointment' doctor_id=user.id %}">احجز دكتورك</a></li>|
                                     <li><a href="">المقالات</a></li>|
-                                    <li><a href="">الصفحه الشخصيه </a></li>|
+                                    <li><a href="{% url 'accounts:my_profile' %}">الصفحه الشخصيه </a></li>|
                                     <li><a href="contact.html">اتصل بنا</a></li>
                                 </ul>
                             </nav>
@@ -65,17 +65,28 @@
                     <div class="col-xl-3 col-lg-3 d-none d-lg-block">
                         <div class="Appointment">
                             
-                            <div class="phone_num d-none d-xl-block"></div>
-                            <div class="d-none d-lg-block">
-                                <a class="boxed-btn3" href="">قدم نفسك</a>
-                            </div>
-                            
-                            <div class="phone_num d-none d-xl-block">
-                                <a class="boxed-btn3" href="">سجل الدخول</a>
-                            </div>
-                            <div class="d-none d-lg-block">
-                                <a class="boxed-btn3" style="background-color: crimson;" href="">التسجيل</a>
-                            </div>
+                            {% if user.is_authenticated %}
+                                <div class="phone_num d-none d-xl-block"></div>
+                                <div class="d-none d-lg-block">
+                                    <a class="boxed-btn3" href="{% url 'accounts:update_profile' %}">قدم نفسك</a>
+                                </div>
+                                <form method="GET">
+                                    {% csrf_token %}
+                                    <!-- ... (your form fields) -->
+                                    <div class="col-lg-3 col-md-12">
+                                        <div class="job_btn">
+                                            <a href="{% url 'accounts:search_doctor' %}" class="boxed-btn3">بحث </a>
+                                        </div>
+                                    </div>
+                                </form>
+                                {% else %}
+                                <div class="phone_num d-none d-xl-block">
+                                    <a class="boxed-btn3" href=" {% url 'accounts:login' %} ">سجل الدخول</a>
+                                </div>
+                                <div class="d-none d-lg-block">
+                                    <a class="boxed-btn3" style="background-color: crimson;" href="{% url 'accounts:signup' %}">التسجيل</a>
+                                </div>
+                            {% endif %} 
                             
                         </div>
                     </div>

@@ -1,0 +1,68 @@
+
+
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'profile/css/styles.css' %}">
+</head>
+<body>
+
+    <header>
+        <h1>User Profile</h1>
+    </header>
+
+    <main>
+        <section class="profile-header">
+            <div class="profile-picture">
+                <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}{% static 'img/candiateds/1.png' %}{% endif %}" alt="Profile Picture">
+            </div>
+            <div class="profile-info">
+                <h2>{{ user.profile.name }}</h2>
+                <p>{{ user.profile.who_i }}</p>
+                <ul class="social-links">
+                    {% if user.profile.website %}
+                        <li><a href="{{ user.profile.google }}" target="_blank">Website</a></li>
+                    {% endif %}
+                    {% if user.profile.twitter %}
+                        <li><a href="https://twitter.com/{{ user.profile.twitter }}" target="_blank">Twitter</a></li>
+                    {% endif %}
+                    {% if user.profile.linkedin %}
+                        <li><a href="{{ user.profile.linkedin }}" target="_blank">LinkedIn</a></li>
+                    {% endif %}
+                    {% if user.profile.github %}
+                        <li><a href="https://github.com/{{ user.profile.github }}" target="_blank">GitHub</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </section>
+
+        <section class="profile-content">
+            <h2>About Me</h2>
+            <p>{{ user.profile.subtitle }}</p>
+
+            <h2>Skills</h2>
+            <ul class="skills-list">
+                
+                    <li>{{ user.profile.specialist_doctor }}</li>
+                
+            </ul>
+
+            <!-- Add more sections as needed -->
+
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2023 User Profile
+    </footer>
+
+</body>
+</html>
+

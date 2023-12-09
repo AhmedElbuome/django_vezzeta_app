@@ -1,0 +1,172 @@
+<!-- templates/registration/logout.html -->
+
+{% load static %}
+<!-- templates/registration/logout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <link rel="stylesheet" href="path/to/your/custom/styles.css"> <!-- Link to your custom stylesheet -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .logout-container {
+            text-align: center;
+            max-width: 500px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            transform: scale(1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        h1 {
+            color: #343a40;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        p {
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .logout-button, .cancel-button {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            margin: 0 10px;
+        }
+
+        .logout-button {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+
+        .cancel-button {
+            background-color: #6c757d;
+            color: #ffffff;
+        }
+
+        .cancel-button:hover {
+            background-color: #5a6268;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .confirmation-modal {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 300px;
+            animation: fade 0.3s ease-in-out;
+        }
+
+        .modal-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            margin: 10px;
+        }
+
+        .modal-button.confirm {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        .modal-button.confirm:hover {
+            background-color: #c82333;
+        }
+
+        .modal-button.cancel {
+            background-color: #6c757d;
+            color: #ffffff;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #5a6268;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logout-container" id="logoutContainer">
+        <h1>Logout</h1>
+        <p>Are you sure you want to logout?</p>
+
+        <button class="logout-button" onclick="showConfirmationModal()">Logout</button>
+        <button class="cancel-button" onclick="window.location.href='{% url 'accounts:doctors_list' %}'">Cancel</button>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="confirmation-modal">
+            <p>Confirm logout?</p>
+            <button class="modal-button confirm" onclick="performLogout()">Yes, Logout</button>
+            <button class="modal-button cancel" onclick="hideConfirmationModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function showConfirmationModal() {
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function hideConfirmationModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+
+        function performLogout() {
+            document.getElementById('logoutContainer').classList.add('loading');
+            document.getElementById('modalOverlay').style.display = 'none';
+            // Simulating a delay for visual effect, replace with the actual form submission code
+            setTimeout(() => {
+                window.location.href = '{% url 'accounts:doctors_list' %}';
+            }, 1000);
+        }
+    </script>
+
+</body>
+</html>

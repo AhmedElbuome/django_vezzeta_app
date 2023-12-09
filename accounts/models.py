@@ -1,14 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.utils.text import slugify
 
 def image_upload(instance, filename):
-    
-    imagename , extension = filename.split('.') 
+    """
+    Generate the file path for uploaded images.
+    """
+    try:
+        imagename, extension = filename.rsplit('.', 1)
+    except ValueError:
+        # If the filename has no dots or multiple dots, set default values
+        imagename, extension = filename, 'png'  # You can set any default extension
 
-    return 'profile/%s.%s'%(instance.id, extension)
+    return f'profile/{instance.id}.{extension}'
+
 
 GENDER = (
     ('M', 'Male'),
@@ -25,12 +33,12 @@ class Profile(models.Model):
         ('نساء و توليد','نساء و توليد'),
         
     )
-    
+    id = models.BigAutoField(primary_key=True)
     user                 = models.OneToOneField(User, verbose_name=_("user"), on_delete=models.CASCADE)
     name                 = models.CharField(_("الاسم :"), max_length=50)
     who_i                = models.TextField(_("من انا :"), max_length=1000)
     price                = models.IntegerField(_("سعر الكشف :"), blank=True, null=True)
-    image                = models.ImageField(_("الصورة الشخصية :"), upload_to=image_upload, blank=True, null=True)
+    profile_image        = models.ImageField(upload_to=image_upload, null=True, blank=True)
     subtitle             = models.CharField(_("نبذه عنك"), max_length=50)
     address              = models.CharField(_("المحافظة :"), max_length=50)
     address_detail       = models.CharField(_("العنوان بالتفصيل :"), max_length=50)
@@ -38,7 +46,7 @@ class Profile(models.Model):
     working_hours        = models.CharField(_("عدد ساعات العمل :"), max_length=50)
     join_new             = models.DateTimeField(_("وقت الانضمام"),auto_now_add=True, blank=True, null=True)
     gender               = models.CharField(_("النوع :"), choices=GENDER, max_length=50)
-    waiting_hours        = models.IntegerField(_("مدة الانتظار :"))
+    waiting_hours        = models.IntegerField(_("مدة الانتظار :"), blank=True, null=True)
     facebook             = models.CharField( max_length=50, blank=True, null=True)
     instgram             = models.CharField( max_length=50, blank=True, null=True)
     google               = models.CharField( max_length=50, blank=True, null=True)
@@ -63,10 +71,28 @@ class Profile(models.Model):
         """Unicode representation of Profile."""
         return str(self.user.username)
 
-def create_profile(sender, **kwargs):
+# def create_profile(sender, **kwargs):
     
-    if kwargs['created']:
+#     if kwargs['created']:
         
-        Profile.objects.create(user = kwargs['instance'])
+#         Profile.objects.create(user = kwargs['instance'])
         
-post_save.connect(create_profile, sender=User)
+# post_save.connect(create_profile, sender=User)
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    
+    if created:
+        
+        Profile.objects.create(user=instance)
+        
+class Card(models.Model):
+    name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to=image_upload, null=True, blank=True)
+
+class Appointment(models.Model):
+    doctor = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    patient = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField()
+    additional_notes = models.TextField(blank=True, null=True)

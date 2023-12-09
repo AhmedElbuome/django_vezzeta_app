@@ -1,0 +1,44 @@
+<!-- appointment_confirmation.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h2 class="text-center">Appointment Confirmed</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-success" role="alert">
+                            <strong>Success!</strong> Your appointment with Dr. {{ doctor.name }} on {{ appointment.date|date:"F d, Y" }} at {{ appointment.time }} has been confirmed.
+                        </div>
+
+                        <!-- Additional Information -->
+                        <h4 class="mb-3">Appointment Details:</h4>
+                        <p><strong>Doctor:</strong> Dr. {{ doctor.name }}</p>
+                        <p><strong>Date:</strong> {{ appointment.date|date:"F d, Y" }}</p>
+                        <p><strong>Time:</strong> {{ appointment.time }}</p>
+                        
+                        <!-- Additional Details -->
+                        <h4 class="mt-4 mb-3">Additional Details:</h4>
+                        <p>{{ appointment.additional_notes }}</p>
+                        
+                        <!-- Action Buttons -->
+                        <div class="text-center mt-4">
+                            <a href="{% url 'accounts:doctor_detail' slug=doctor.slug %}" class="btn btn-primary">Go to Profile</a>
+                            <a href="{% url 'accounts:doctors_list' %}" class="btn btn-secondary">Back to Home</a>
+                        </div>
+                        
+                        <!-- Interactive Element: Rating -->
+                        <div class="mt-4">
+                            <h4>Rate Your Experience:</h4>
+                            <!-- Add a star rating component or any other interactive element for user feedback -->
+                            <!-- You can use a JavaScript library for a more interactive rating system -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

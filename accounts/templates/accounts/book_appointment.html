@@ -1,0 +1,81 @@
+<!-- book_appointment.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="text-center">Book an Appointment with {{ doctor.name }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'accounts:book_appointment' doctor.id %}">
+                            {% csrf_token %}
+
+                            <!-- Date and Time Pickers -->
+                            <div class="mb-3">
+                                <label for="id_date" class="form-label">Select Date:</label>
+                                <input type="date" name="date" id="id_date" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_time" class="form-label">Select Time:</label>
+                                <input type="time" name="time" id="id_time" class="form-control" required>
+                            </div>
+
+                            <!-- Additional Fields -->
+                            <div class="mb-3">
+                                <label for="id_additional_fields" class="form-label">Additional Fields:</label>
+                                <input type="text" name="additional_fields" id="id_additional_fields" class="form-control">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Book Appointment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Add JavaScript for dynamic updates -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get references to date and time input elements
+            const dateInput = document.getElementById('id_date');
+            const timeInput = document.getElementById('id_time');
+
+            // Add event listeners to date and time inputs
+            dateInput.addEventListener('change', updateAvailableTimeSlots);
+            timeInput.addEventListener('change', updateAvailableTimeSlots);
+
+            function updateAvailableTimeSlots() {
+                const selectedDate = dateInput.value;
+                const selectedTime = timeInput.value;
+
+                // Perform AJAX request to check availability
+                const doctorId = /* Get the doctor ID from the template or other source */;
+                const url = `/check_availability/${doctorId}/${selectedDate}/${selectedTime}/`;
+
+                // Use fetch or another AJAX library to make the request
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        const available = data.available;
+
+                        // Update the UI based on availability
+                        if (available) {
+                            // Enable or show available time slots
+                            console.log('Time slots are available.');
+                        } else {
+                            // Disable or hide unavailable time slots
+                            console.log('Time slots are not available.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking availability:', error);
+                    });
+            }
+        });
+    </script>
+
+{% endblock %}
